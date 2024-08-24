@@ -1,0 +1,32 @@
+#interface{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content:center;
+    flex-flow: column;
+    align-items: center;
+    text-align: center;
+}
+#button{
+    background-color: teal;
+    color: white;
+    width: 20%;
+    font-size: 25pt;
+    padding:10px;
+    user-select: none;
+}
+#total{
+    width: 20%;
+    font-size: 50pt;
+    padding:10px;
+}
+#title{
+    width: 100%;
+    font-size: 30pt;
+    padding: 30px;
+}
+#dice{
+    display: flex;
+    width:30%;
+    justify-content:space-around;
+}

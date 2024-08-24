@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="20.406124mm"
+   height="20.406124mm"
+   viewBox="0 0 20.406124 20.406124"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   sodipodi:docname="redthree.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="5.5731762"
+     inkscape:cx="9.9584147"
+     inkscape:cy="40.371952"
+     inkscape:window-width="1920"
+     inkscape:window-height="986"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-71.073151,-79.42865)">
+    <rect
+       style="fill:#c12b08;fill-opacity:1;stroke:none;stroke-width:1.37685;stroke-linecap:round;stroke-linejoin:miter;paint-order:markers stroke fill"
+       id="rect850"
+       width="20.406124"
+       height="20.406124"
+       x="71.073151"
+       y="79.311935"
+       ry="3.2282608" />
+    <circle
+       style="fill:#d8b302;fill-opacity:1;stroke:none;stroke-width:5.69182;stroke-linecap:round;stroke-linejoin:miter;paint-order:markers stroke fill"
+       id="path1087"
+       cx="81.276215"
+       cy="89.514999"
+       r="2.5636189" />
+    <circle
+       style="fill:#d8b302;fill-opacity:1;stroke:none;stroke-width:5.69182;stroke-linecap:round;stroke-linejoin:miter;paint-order:markers stroke fill"
+       id="path1087-9"
+       cx="74.892868"
+       cy="83.131653"
+       r="2.5636189" />
+    <circle
+       style="fill:#d8b302;fill-opacity:1;stroke:none;stroke-width:5.69182;stroke-linecap:round;stroke-linejoin:miter;paint-order:markers stroke fill"
+       id="path1087-0"
+       cx="87.659554"
+       cy="95.898338"
+       r="2.5636189" />
+  </g>
+</svg>
