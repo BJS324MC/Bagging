@@ -4,13 +4,13 @@ const shuffle = array => {
         [array[i], array[j]] = [array[j], array[i]];
     }
 },
-roll = () => {
-    if (p >= bag.length) {
-        p = 0;
-        shuffle(bag);
+    roll = () => {
+        if (p >= bag.length) {
+            p = 0;
+            shuffle(bag);
+        }
+        return bag[p++];
     }
-    return bag[p++];
-}
 let bag = [], p = 0;
 for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) bag.push([i, j]);
 shuffle(bag);
@@ -19,8 +19,8 @@ let redDie = document.getElementById('redDie'), yellowDie = document.getElementB
     button = document.getElementById('button'), total = document.getElementById('total');
 
 button.addEventListener('click', () => {
-    let result = roll();
-    redDie.src = `./dice/red${result[0]+1}.svg`;
-    yellowDie.src = `./dice/yellow${result[1]+1}.svg`;
-    total.innerText = result[0] + result[1] + 2;
+    let result = roll().map(a => a + 1);
+    redDie.src = `./dice/red${result[0]}.svg`;
+    yellowDie.src = `./dice/yellow${result[1]}.svg`;
+    total.innerText = result[0] + result[1];
 })
