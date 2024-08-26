@@ -14,7 +14,7 @@
             red.as = "image";
             let yellow = red.cloneNode(true);
             red.href = `./dice/red${i}.svg`;
-            yellow.href = `./dice/yellow${i}.svg`; 
+            yellow.href = `./dice/yellow${i}.svg`;
             document.head.appendChild(red);
             document.head.appendChild(yellow);
         }
@@ -32,6 +32,23 @@
         <div id="button">Roll</div>
     </div>
     <script src='main.js'></script>
+    <script type='module'>
+        import { Soundfont } from "https://unpkg.com/smplr/dist/index.mjs";
+        let thonk = 0,
+            musicSequence = [
+                'C5', 'C5', 'E5', 'E5', 'A4', 'A4', 'C5', 'C5', 'F4', 'F4', 'A4', 'A4', 'G4', 'G4', 'B4', 'B4',
+                'C5', 'C5', 'E5', 'E5', 'A4', 'A4', 'C5', 'C5', 'F4', 'F4', 'A4', 'A4', 'G4', 'G4', 'B4', 'B4'
+            ];
+        const context = new AudioContext();
+        var marimba = new Soundfont(context, { instrument: "vibraphone" });
+        const clicking = () => {
+            context.resume();
+            marimba.start({ note: musicSequence[thonk], velocity: 80 });
+            thonk = (thonk + 1) % musicSequence.length;
+        }
+        document.getElementById('button').addEventListener('click', clicking);
+        document.getElementById('button').addEventListener('touchstart', clicking);
+    </script>
 </body>
 
 </html>
