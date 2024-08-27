@@ -18,6 +18,13 @@
             document.head.appendChild(red);
             document.head.appendChild(yellow);
         }
+        for(let type of ['barbarians','blueCastle','greenCastle','yellowCastle']){
+            let res = document.createElement("link");
+            res.rel = "preload";
+            res.as = "image";
+            res.href = `./dice/${type}.svg`;
+            document.head.appendChild(res);
+        }
     </script>
 </head>
 
@@ -27,27 +34,86 @@
         <div id="dice">
             <img id="redDie" src="./dice/red1.svg" alt="RedDice" />
             <img id="yellowDie" src="./dice/yellow1.svg" alt="YellowDice" />
+            <img id="eventDie" src="./dice/barbarians.svg" alt="EventDice" />
         </div>
         <p id="total">0</p>
+        <span id="tacks"></span>
+        <p id="turn">Turn: 0</p>
         <div id="button">Roll</div>
     </div>
     <script src='main.js'></script>
     <script type='module'>
         import { Soundfont } from "https://unpkg.com/smplr/dist/index.mjs";
         let thonk = 0,
-            musicSequence = [
-                'C5', 'C5', 'E5', 'E5', 'A4', 'A4', 'C5', 'C5', 'F4', 'F4', 'A4', 'A4', 'G4', 'G4', 'B4', 'B4',
-                'C5', 'C5', 'E5', 'E5', 'A4', 'A4', 'C5', 'C5', 'F4', 'F4', 'A4', 'A4', 'G4', 'G4', 'B4', 'B4'
+            bpm = 150,
+            bars = [ // 16th .  8th -  4th _  2nd =
+                ['C3','-','G3','-','C3','-','A3','-','C3','-','G3','-','C3','-','F#3','-'],
+                ['C3','-','G3','-','C3','-','A3','-','C3','-','G3','-','C3','-','F#3','-'],
+                ['C3','-','G3','-','C3','-','A3','-','C3','-','G3','-','C3','-','F#3','-'],
+                ['C3','-','G3','-','C3','-','A3','-','C3','-','G3','-','C3','-','F#3','-'],
+                
+                ['R', '-', 'C4', '-', 'G4', '-', 'C5', '-', 'D#5', '_', 'C5', '_'],
+                ['B4', '-', 'C5', '-', 'D5', '_', 'C5', '-', 'G4', '-', 'D#4', '-', 'C4', '-'],
+                ['D4', '-', 'D#4', '-', 'F#4', '_', 'G4', '-', 'D#4', '-', 'C4', '-', 'A3', '-'],
+                ['B3', '-', 'C4', '-', 'D4', '_', 'C4', '_', 'R', '_', 'R', '-'],
+                ['R', '-', 'C4', '-', 'G4', '-', 'C5', '-', 'D#5', '_', 'A#5', '_'],
+                ['A5', '-', 'G5', '-', 'A5', '_', 'A#5', '-', 'G5', '-', 'D#5', '-', 'C5', '-'],
+                ['B4', '-', 'C5', '-', 'D5', '_', 'D#5', '-', 'C5', '-', 'G4', '-', 'D#4', '-'],
+                ['B4', '-', 'A4', '-', 'B4', '_', 'C5', '_', 'R', '_', 'R', '-'],
+
+                ['R', '-', 'C4', '-', 'G4', '-', 'C5', '-', 'D#5', '_', 'G#5', '_'],
+                ['G5', '-', 'F5', '-', 'G5', '_', 'C6', '-', 'G5', '-', 'D#5', '-', 'C5', '-'],
+                ['D5', '-', 'D#5', '-', 'F5', '_', 'G5', '-', 'D#5', '-', 'C5', '-', 'A4', '-'],
+                ['B4', '-', 'C5', '-', 'D5', '_', 'C5', '_', 'R', '_', 'R', '-'],
+                ['R', '-', 'C4', '-', 'G4', '-', 'C5', '-', 'D#5', '_', 'A#5', '_'],
+                ['A5', '-', 'G5', '-', 'A5', '_', 'A#5', '-', 'G5', '-', 'D#5', '-', 'C5', '-'],
+                ['B4', '-', 'C5', '-', 'D5', '_', 'D#5', '-', 'C5', '-', 'G4', '-', 'D#4', '-'],
+                ['B4', '-', 'A4', '-', 'B4', '_', 'C5', '_', 'R', '_', 'R', '-'],
+
+                ['R', '-', 'F4', '-', 'G#4', '-', 'C5', '-', 'F5', '_', 'C5', '_'],
+                ['B4', '-', 'C5', '-', 'D5', '_', 'B4', '-', 'G4', '-', 'B4', '-', 'D5', '-'],
+                ['D#5', '-', 'F5', '.', 'D#5', '.', 'D5', '-', 'C5', '-', 'C6', '_', 'A#5', '-', 'G#5', '-'],
+                ['G5', '-', 'G#5', '.', 'G5', '.', 'F5', '-', 'G#5', '-', 'G5', '_', 'R', '_'],
+                ['R', '-', 'F4', '-', 'G#4', '-', 'C5', '-', 'F5', '_', 'C5', '_'],
+                ['B4', '-', 'C5', '-', 'D5', '_', 'B4', '-', 'G4', '-', 'B4', '-', 'D5', '-'],
+                ['D#5', '-', 'F5', '.', 'D#5', '.', 'D5', '-', 'C5', '-', 'C6', '_', 'D6', '-', 'D#6', '-'],
+                ['D6', '-', 'C6', '-', 'B5', '-', 'G#5', '-', 'G5', '_', 'R', '_'],
+
+                ['R', '-', 'F4', '-', 'G#4', '-', 'C5', '-', 'F5', '_', 'C5', '_'],
+                ['B4', '-', 'C5', '-', 'D5', '_', 'B4', '-', 'G4', '-', 'B4', '-', 'D5', '-'],
+                ['D#5', '-', 'F5', '.', 'D#5', '.', 'D5', '-', 'C5', '-', 'C6', '_', 'A#5', '-', 'G#5', '-'],
+                ['G5', '-', 'G#5', '.', 'G5', '.', 'F5', '-', 'G#5', '-', 'G5', '_', 'R', '_'],
+                ['R', '-', 'F4', '-', 'G#4', '-', 'C5', '-', 'F5', '_', 'G#5', '_'],
+                ['G5', '-', 'F5', '-', 'D5', '_', 'B4', '_', 'D#5', '-', 'D5', '-'],
+                ['C5', '-', 'B4', '-', 'C5', '-', 'D5', '-', 'D#5', '_', 'C5', '_'],
+                ['B4', '-', 'C5', '-', 'D5', '_', 'C5', '_', 'C6', '_']
             ];
         const context = new AudioContext();
-        var marimba = new Soundfont(context, { instrument: "vibraphone" });
+        let marimba = new Soundfont(context, { instrument: "vibraphone" });
         const clicking = () => {
-            context.resume();
-            marimba.start({ note: musicSequence[thonk], velocity: 80 });
-            thonk = (thonk + 1) % musicSequence.length;
-        }
-        document.getElementById('button').addEventListener('click', clicking);
-        document.getElementById('button').addEventListener('touchstart', clicking);
+                context.resume();
+                let totalDuration = 0, bps = bpm / 60, now = context.currentTime;
+                for (let i = 0; i < bars[thonk].length / 2; i++) {
+                    let note = bars[thonk][i * 2], duration = bars[thonk][i * 2 + 1];
+                    if (note !== 'R') marimba.start({ note: note, velocity: 120, time: now + totalDuration / 1000 });
+                    switch (duration) {
+                        case '.':
+                            totalDuration += 1000 / (4 * bps);
+                            break;
+                        case '-':
+                            totalDuration += 1000 / (2 * bps);
+                            break;
+                        case '_':
+                            totalDuration += 1000 / bps;
+                            break;
+                        case '=':
+                            totalDuration += 2000 / bps;
+                            break;
+                    }
+                }
+                thonk = (thonk + 1) % bars.length;
+            }
+        marimba.load.then(() => document.getElementById('button').addEventListener('click', clicking));
     </script>
 </body>
 
