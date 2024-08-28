@@ -18,7 +18,7 @@
             document.head.appendChild(red);
             document.head.appendChild(yellow);
         }
-        for(let type of ['barbarians','blueCastle','greenCastle','yellowCastle']){
+        for (let type of ['barbarians', 'blueCastle', 'greenCastle', 'yellowCastle']) {
             let res = document.createElement("link");
             res.rel = "preload";
             res.as = "image";
@@ -36,22 +36,21 @@
             <img id="yellowDie" src="./dice/yellow1.svg" alt="YellowDice" />
             <img id="eventDie" src="./dice/barbarians.svg" alt="EventDice" />
         </div>
-        <p id="total">0</p>
-        <span id="tacks"></span>
-        <p id="turn">Turn: 0</p>
+        <p id="total"><span id="totalNumber">?</span><span id="tacks"></span></p>
+        <p id="turn">Turn 0</p>
         <div id="button">Roll</div>
     </div>
     <script src='main.js'></script>
     <script type='module'>
-        import { Soundfont } from "https://unpkg.com/smplr/dist/index.mjs";
+        import { Soundfont, DrumMachine } from "./index.mjs";
         let thonk = 0,
             bpm = 150,
             bars = [ // 16th .  8th -  4th _  2nd =
-                ['C3','-','G3','-','C3','-','A3','-','C3','-','G3','-','C3','-','F#3','-'],
-                ['C3','-','G3','-','C3','-','A3','-','C3','-','G3','-','C3','-','F#3','-'],
-                ['C3','-','G3','-','C3','-','A3','-','C3','-','G3','-','C3','-','F#3','-'],
-                ['C3','-','G3','-','C3','-','A3','-','C3','-','G3','-','C3','-','F#3','-'],
-                
+                ['C3', '-', 'G3', '-', 'C3', '-', 'A3', '-', 'C3', '-', 'G3', '-', 'C3', '-', 'F#3', '-'],
+                ['C3', '-', 'G3', '-', 'C3', '-', 'A3', '-', 'C3', '-', 'G3', '-', 'C3', '-', 'F#3', '-'],
+                ['C3', '-', 'G3', '-', 'C3', '-', 'A3', '-', 'C3', '-', 'G3', '-', 'C3', '-', 'F#3', '-'],
+                ['C3', '-', 'G3', '-', 'C3', '-', 'A3', '-', 'C3', '-', 'G3', '-', 'C3', '-', 'F#3', '-'],
+
                 ['R', '-', 'C4', '-', 'G4', '-', 'C5', '-', 'D#5', '_', 'C5', '_'],
                 ['B4', '-', 'C5', '-', 'D5', '_', 'C5', '-', 'G4', '-', 'D#4', '-', 'C4', '-'],
                 ['D4', '-', 'D#4', '-', 'F#4', '_', 'G4', '-', 'D#4', '-', 'C4', '-', 'A3', '-'],
@@ -68,7 +67,7 @@
                 ['R', '-', 'C4', '-', 'G4', '-', 'C5', '-', 'D#5', '_', 'A#5', '_'],
                 ['A5', '-', 'G5', '-', 'A5', '_', 'A#5', '-', 'G5', '-', 'D#5', '-', 'C5', '-'],
                 ['B4', '-', 'C5', '-', 'D5', '_', 'D#5', '-', 'C5', '-', 'G4', '-', 'D#4', '-'],
-                ['B4', '-', 'A4', '-', 'B4', '_', 'C5', '_', 'R', '_', 'R', '-'],
+                ['B4', '-', 'A4', '-', 'B4', '.', 'A4', '.', 'B4', '-', 'C5', '_', 'R', '_', 'R', '-'],
 
                 ['R', '-', 'F4', '-', 'G#4', '-', 'C5', '-', 'F5', '_', 'C5', '_'],
                 ['B4', '-', 'C5', '-', 'D5', '_', 'B4', '-', 'G4', '-', 'B4', '-', 'D5', '-'],
@@ -89,31 +88,63 @@
                 ['B4', '-', 'C5', '-', 'D5', '_', 'C5', '_', 'C6', '_']
             ];
         const context = new AudioContext();
-        let marimba = new Soundfont(context, { instrument: "vibraphone" });
-        const clicking = () => {
-                context.resume();
-                let totalDuration = 0, bps = bpm / 60, now = context.currentTime;
-                for (let i = 0; i < bars[thonk].length / 2; i++) {
-                    let note = bars[thonk][i * 2], duration = bars[thonk][i * 2 + 1];
-                    if (note !== 'R') marimba.start({ note: note, velocity: 120, time: now + totalDuration / 1000 });
-                    switch (duration) {
-                        case '.':
-                            totalDuration += 1000 / (4 * bps);
-                            break;
-                        case '-':
-                            totalDuration += 1000 / (2 * bps);
-                            break;
-                        case '_':
-                            totalDuration += 1000 / bps;
-                            break;
-                        case '=':
-                            totalDuration += 2000 / bps;
-                            break;
-                    }
+        let instrument = new Soundfont(context, { instrument: "accordion" }),
+            dm = new DrumMachine(context);
+        const playBar = thonk => {
+            let totalDuration = 0, realDuration = 0, bps = bpm / 60, now = context.currentTime;
+            for (let i = 0; i < bars[thonk].length / 2; i++) {
+                let note = bars[thonk][i * 2], duration = bars[thonk][i * 2 + 1];
+                switch (duration) {
+                    case '.':
+                        realDuration = 1 / (4 * bps);
+                        break;
+                    case '-':
+                        realDuration = 1 / (2 * bps);
+                        break;
+                    case '_':
+                        realDuration = 1 / bps;
+                        break;
+                    case '=':
+                        realDuration = 2 / bps;
+                        break;
                 }
-                thonk = (thonk + 1) % bars.length;
+                if (note !== 'R') instrument.start({ note: note, velocity: 120, duration: realDuration, time: now + totalDuration });
+                totalDuration += realDuration;
             }
-        marimba.load.then(() => document.getElementById('button').addEventListener('click', clicking));
+            let thing1 = thonk < 19 || thonk > 31 ? "hihat-close" : "snare", thing2 = thonk < 19 || thonk > 31 ? "hihat-open" : "cymbal";
+            if (thonk !== 19) {
+                if (thonk === 27) {
+                    dm.start({ note: thing1, time: now + 0.01 });
+                    dm.start({ note: thing2, time: now + 1 / (2 * bps) + 0.01 });
+                    dm.start({ note: thing1, time: now + 2 / (2 * bps) + 0.01 });
+                    dm.start({ note: thing2, time: now + 3 / (2 * bps) + 0.01 });
+                    dm.start({ note: "hihat-close", time: now + 3 / bps + 0.01 });
+                    dm.start({ note: "hihat-open", time: now + 3.25 / bps + 0.01 });
+                    dm.start({ note: "cymbal", time: now + 3.5 / bps + 0.01 });
+                }
+                else if(thonk > 33) {
+                    dm.start({ note: thing2, time: now + 0.01 });
+                    dm.start({ note: thing2, time: now + 2 / bps + 0.01 });
+                }
+                else for (let k = 0; k < 4; k++) {
+                    dm.start({ note: thing1, time: now + 1 / (2 * bps) * k * 2 + 0.01 });
+                    dm.start({ note: thing2, time: now + 1 / (2 * bps) * (k * 2 + 1) + 0.01 });
+                }
+            }
+            else {
+                dm.start({ note: "hihat-close", time: now + 0.01 });
+                dm.start({ note: "hihat-open", time: now + 1 / (2 * bps) + 0.01 });
+                dm.start({ note: "hihat-close", time: now + 3. / bps + 0.01 });
+                dm.start({ note: "hihat-open", time: now + 3.25 / bps + 0.01 });
+                dm.start({ note: "cymbal", time: now + 3.5 / bps + 0.01 });
+            }
+        },
+        clicking = () => {
+            context.resume();
+            playBar(thonk);
+            thonk = (thonk + 1) % bars.length;
+        }//, playTheWholeSoundTrack = () => {for (let l = 0; l < bars.length; l++) setTimeout(() => playBar(l), l * 240000 / bpm);}
+        document.getElementById('button').addEventListener('click', clicking)
     </script>
 </body>
 
