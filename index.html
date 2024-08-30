@@ -45,7 +45,7 @@
         import { Soundfont, DrumMachine } from "./index.mjs";
         let thonk = 0,
             bpm = 150,
-            bars = [ // 16th .  8th -  4th _  2nd =
+            bars2 = [ // 16th .  8th -  4th _  2nd =
                 ['C3', '-', 'G3', '-', 'C3', '-', 'A3', '-', 'C3', '-', 'G3', '-', 'C3', '-', 'F#3', '-'],
                 ['C3', '-', 'G3', '-', 'C3', '-', 'A3', '-', 'C3', '-', 'G3', '-', 'C3', '-', 'F#3', '-'],
                 ['C3', '-', 'G3', '-', 'C3', '-', 'A3', '-', 'C3', '-', 'G3', '-', 'C3', '-', 'F#3', '-'],
@@ -86,9 +86,27 @@
                 ['G5', '-', 'F5', '-', 'D5', '_', 'B4', '_', 'D#5', '-', 'D5', '-'],
                 ['C5', '-', 'B4', '-', 'C5', '-', 'D5', '-', 'D#5', '_', 'C5', '_'],
                 ['B4', '-', 'C5', '-', 'D5', '_', 'C5', '_', 'C6', '_']
+            ],
+            bars = [
+                ['C4','='],
+                ['D4','='],
+                ['E4','='],
+                ['F4','='],
+                ['G4','='],
+                ['A4','='],
+                ['B4','='],
+                ['C5','='],
+                ['C5','='],
+                ['B4','='],
+                ['A4','='],
+                ['G4','='],
+                ['F4','='],
+                ['E4','='],
+                ['D4','='],
+                ['C4','='],
             ];
         const context = new AudioContext();
-        let instrument = new Soundfont(context, { instrument: "accordion" }),
+        let instrument = new Soundfont(context, { instrument: "violin" }),
             dm = new DrumMachine(context);
         const playBar = thonk => {
             let totalDuration = 0, realDuration = 0, bps = bpm / 60, now = context.currentTime;
@@ -111,7 +129,7 @@
                 if (note !== 'R') instrument.start({ note: note, velocity: 120, duration: realDuration, time: now + totalDuration });
                 totalDuration += realDuration;
             }
-            let thing1 = thonk < 19 || thonk > 31 ? "hihat-close" : "snare", thing2 = thonk < 19 || thonk > 31 ? "hihat-open" : "cymbal";
+            /**let thing1 = thonk < 19 || thonk > 31 ? "hihat-close" : "snare", thing2 = thonk < 19 || thonk > 31 ? "hihat-open" : "cymbal";
             if (thonk !== 19) {
                 if (thonk === 27) {
                     dm.start({ note: thing1, time: now + 0.01 });
@@ -137,7 +155,7 @@
                 dm.start({ note: "hihat-close", time: now + 3. / bps + 0.01 });
                 dm.start({ note: "hihat-open", time: now + 3.25 / bps + 0.01 });
                 dm.start({ note: "cymbal", time: now + 3.5 / bps + 0.01 });
-            }
+            }*/
         },
         clicking = () => {
             context.resume();
